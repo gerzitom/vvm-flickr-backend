@@ -47,7 +47,7 @@ public class FlickrService {
     params.setMaxUploadDate(search.getDateTo());
     params.setHasGeo(true);
     params.setExtras(extras);
-    params.setLongitude(Float.toString(search.getGeo().getLon()));
+    params.setLongitude(Float.toString(search.getGeo().getLng()));
     params.setLatitude(Float.toString(search.getGeo().getLat()));
     params.setAccuracy(11);
     return photosInterface.search(params, photosToLoad, 0);

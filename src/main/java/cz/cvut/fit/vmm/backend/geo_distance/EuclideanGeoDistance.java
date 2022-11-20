@@ -13,7 +13,7 @@ public class EuclideanGeoDistance extends AbstractComputeStrategy implements Geo
   @Override
   public Double computeGeoDistance(PhotoReadDto photo) {
     double latDistance = (double)(photo.getGeo().getLatitude() - this.search.getGeo().getLat());
-    double lonDistance = (double)(photo.getGeo().getLongitude() - this.search.getGeo().getLon());
+    double lonDistance = (double)(photo.getGeo().getLongitude() - this.search.getGeo().getLng());
     return Math.sqrt(Math.pow(latDistance, 2) + Math.pow(lonDistance, 2));
   }
 }

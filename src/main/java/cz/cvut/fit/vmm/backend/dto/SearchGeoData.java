@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SearchGeoData {
-  private float lon;
+  private float lng;
   private float lat;
 }
