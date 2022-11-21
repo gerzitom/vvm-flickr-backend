@@ -1,5 +1,6 @@
 package cz.cvut.fit.vmm.backend;
 
+import cz.cvut.fit.vmm.backend.dto.PhotoComputeScore;
 import cz.cvut.fit.vmm.backend.dto.PhotoReadDto;
 import cz.cvut.fit.vmm.backend.dto.PhotoScore;
 import cz.cvut.fit.vmm.backend.dto.PhotoSearchDto;
@@ -7,6 +8,7 @@ import cz.cvut.fit.vmm.backend.dto.PhotoSortWrapper;
 import cz.cvut.fit.vmm.backend.score_strategy.BasicStrategy;
 import cz.cvut.fit.vmm.backend.score_strategy.ScoreComputeStrategy;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class PhotosReranker {
@@ -24,15 +26,15 @@ public class PhotosReranker {
   public List<PhotoSortWrapper> sortPhotos(){
     List<PhotoSortWrapper> sortReadyPhotos = computePhotoScore();
     return sortReadyPhotos.stream()
-            .sorted((photo1, photo2) -> (int) (photo1.getScore().getTotal() - photo2.getScore().getTotal()))
+            .sorted(Comparator.comparingDouble(PhotoSortWrapper::getScore).reversed())
             .toList();
   }
 
   private List<PhotoSortWrapper> computePhotoScore(){
     return originalPhotos.stream()
             .map(photo -> {
-              PhotoScore score = scoreComputeStrategy.computePhotoScore(photo);
-              return new PhotoSortWrapper(photo, score);
+              PhotoComputeScore score = scoreComputeStrategy.computePhotoScore(photo);
+              return new PhotoSortWrapper(photo, score.getScore(), score.getScoreStats());
             })
             .toList();
   }

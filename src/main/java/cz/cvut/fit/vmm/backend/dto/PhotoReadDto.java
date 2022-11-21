@@ -17,7 +17,7 @@ import java.util.List;
 public class PhotoReadDto {
   private String url;
   private String title;
-  private String author;
+  private PhotoAuthor author;
   private String id;
   private Date dateTaken;
   private Date datePosted;
@@ -27,11 +27,11 @@ public class PhotoReadDto {
   public PhotoReadDto(Photo photo) {
     this.url = photo.getLargeUrl();
     this.title = photo.getTitle();
-    this.author = photo.getOwner().getUsername();
     this.id = photo.getId();
     this.dateTaken = photo.getDateTaken();
     this.datePosted = photo.getDatePosted();
     this.tags = photo.getTags();
     this.geo = photo.getGeoData();
+    this.author = new PhotoAuthor(photo);
   }
 }

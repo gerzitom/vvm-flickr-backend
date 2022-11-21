@@ -38,12 +38,13 @@ public class FlickrService {
 
 
   private PhotoList<Photo> searchFlickr(PhotoSearchDto search, int photosToLoad) throws FlickrException {
-    Set<String> extras = Set.of("date_taken", "owner_name", "geo", "date_upload");
+    Set<String> extras = Set.of("date_taken", "owner_name", "geo", "date_upload", "path_alias", "icon_server");
     SearchParameters params = new SearchParameters();
     params.setMedia("photos");
     params.setExtras(Stream.of("media").collect(Collectors.toSet()));
     params.setText(search.getQuery());
     params.setTags(search.getTags());
+    params.setMinUploadDate(search.getDateFrom());
     params.setMaxUploadDate(search.getDateTo());
     params.setHasGeo(true);
     params.setExtras(extras);
