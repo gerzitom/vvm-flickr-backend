@@ -5,24 +5,20 @@ import cz.cvut.fit.vmm.backend.dto.PhotoReadDto;
 import cz.cvut.fit.vmm.backend.dto.PhotoScore;
 import cz.cvut.fit.vmm.backend.dto.PhotoSearchDto;
 import cz.cvut.fit.vmm.backend.geo_distance.EuclideanGeoDistance;
-import cz.cvut.fit.vmm.backend.geo_distance.GeoDistance;
 import cz.cvut.fit.vmm.backend.string_distance.LevenshteinDistance;
-import cz.cvut.fit.vmm.backend.string_distance.StringDistance;
-
-import java.util.Arrays;
 
 public class BasicStrategy extends AbstractComputeStrategy implements ScoreComputeStrategy {
 
 
   public BasicStrategy(PhotoSearchDto search) {
     super(search);
-    geoDistance = new EuclideanGeoDistance(search);
+    geoDistance = new EuclideanGeoDistance();
     stringDistance = new LevenshteinDistance();
   }
 
   @Override
   public PhotoComputeScore computePhotoScore(PhotoReadDto photo) {
-    Double geoDistance = this.geoDistance.computeGeoDistance(photo);
+    Double geoDistance = this.geoDistance.computeGeoDistance(photo, this.search);
     Double titleStringDistance = photoTitleDistance(photo);
     Double authorNameStringDistance = photoAuthorDistance(photo);
     Double roundedGeoDistance = Math.round(geoDistance * 1000.0) / 1000.0;

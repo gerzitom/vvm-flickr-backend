@@ -1,6 +1,5 @@
 package cz.cvut.fit.vmm.backend.dto;
 
-import com.flickr4java.flickr.photos.GeoData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +17,8 @@ public class PhotoSearchDto {
   private Date dateTo;
   private String[] tags;
   private SearchGeoData geo;
+  private int geoScale;
+  private int titleScale;
+  private int pagesToFetch;
+  private boolean nameIncludesBonus;
 }
