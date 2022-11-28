@@ -30,7 +30,16 @@ public class FlickrService {
   }
 
   public List<PhotoSortWrapper> searchPhotosWithReranking(PhotoSearchDto search) throws FlickrException, ExecutionException, InterruptedException {
-    List<PhotoSortWrapper> sortedPhotos = photoSearchRerankingService.searchPhotos(search);
+    List<PhotoSortWrapper> sortedPhotos = photoSearchRerankingService.searchPhotos(search, 0, search.getPagesToFetch());
+    return sortedPhotos
+            .stream()
+            .distinct()
+            .limit(100)
+            .toList();
+  }
+
+  public List<PhotoSortWrapper> searchPhotosWithReranking(PhotoSearchDto search, int pageFrom, int pageTo) throws FlickrException, ExecutionException, InterruptedException {
+    List<PhotoSortWrapper> sortedPhotos = photoSearchRerankingService.searchPhotos(search, pageFrom, pageTo);
     return sortedPhotos
             .stream()
             .distinct()

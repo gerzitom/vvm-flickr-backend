@@ -29,8 +29,8 @@ public class PhotoSearchRerankingService {
   @Autowired
   private ScoreComputingStrategy scoreComputingStrategy;
 
-  public List<PhotoSortWrapper> searchPhotos(PhotoSearchDto search) throws FlickrException {
-    List<CompletableFuture<List<PhotoSortWrapper>>> photoScores = createFetchers(search);
+  public List<PhotoSortWrapper> searchPhotos(PhotoSearchDto search, int pageFrom, int pageTo) throws FlickrException {
+    List<CompletableFuture<List<PhotoSortWrapper>>> photoScores = createFetchers(search, pageFrom, pageTo);
     waitForAllRequestsToBeDone(photoScores);
     List<PhotoSortWrapper> myPhotos = combineDataToList(photoScores);
     return myPhotos
@@ -51,9 +51,9 @@ public class PhotoSearchRerankingService {
             .flatMap(Collection::stream).toList();
   }
 
-  private List<CompletableFuture<List<PhotoSortWrapper>>> createFetchers(PhotoSearchDto search){
+  private List<CompletableFuture<List<PhotoSortWrapper>>> createFetchers(PhotoSearchDto search, int pageFrom, int pageTo){
     List<CompletableFuture<List<PhotoSortWrapper>>> photoScores = new ArrayList<>();
-    for (int i = 0;i <= search.getPagesToFetch(); i++){
+    for (int i = pageFrom; i <= pageTo; i++){
       photoScores.add(fetchPhotosAndComputeScore(search, i));
     }
     return photoScores;
