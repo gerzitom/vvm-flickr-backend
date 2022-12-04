@@ -35,7 +35,7 @@ public class ScoreComputingService {
 
   private Double applyBonuses(Double score, PhotoSearchDto search){
     Double factor = 1.0;
-    if(search.isNameIncludesBonus()) factor *= 0.9;
+    if(search.isNameIncludesBonus()) factor *= 1.05;
     return score * factor;
   }
 

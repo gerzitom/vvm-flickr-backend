@@ -23,7 +23,7 @@ public class FlickrService {
     List<Photo> photos = flickrPhotosFetcher.searchFlickr(search);
     return photos
             .stream()
-            .limit(50)
+            .limit(30)
             .map(PhotoReadDto::new)
             .toList();
   }
@@ -33,7 +33,7 @@ public class FlickrService {
     return sortedPhotos
             .stream()
             .distinct()
-            .limit(50)
+            .limit(30)
             .toList();
   }
 
@@ -42,7 +42,7 @@ public class FlickrService {
     return sortedPhotos
             .stream()
             .distinct()
-            .limit(50)
+            .limit(30)
             .toList();
   }
 

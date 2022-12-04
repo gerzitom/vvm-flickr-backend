@@ -31,7 +31,7 @@ public class SearchController {
     return flickrService.searchPhotosWithReranking(searchDto);
   }
 
-  @PostMapping("/rebalanced-without-paralizing")
+  @PostMapping("/rebalanced-without-parallelization")
   public List<PhotoSortWrapper> handleClassicRebalancedSearch(@RequestBody PhotoSearchDto searchDto) throws FlickrException, ExecutionException, InterruptedException {
     return flickrService.searchPhotosWithoutParallelization(searchDto);
   }
