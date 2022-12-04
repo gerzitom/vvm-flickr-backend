@@ -13,12 +13,12 @@ import java.util.Date;
 @AllArgsConstructor
 public class PhotoSearchDto {
   private String query;
-  private Date dateFrom;
-  private Date dateTo;
+  private Date date;
   private String[] tags;
   private SearchGeoData geo;
   private int geoScale;
   private int titleScale;
+  private int dateScale;
   private int pagesToFetch;
   private boolean nameIncludesBonus;
 }

@@ -1,14 +1,13 @@
-package cz.cvut.fit.vmm.backend.string_distance;
+package cz.cvut.fit.vmm.backend.distance;
 
 import java.util.Arrays;
 
-public class LevenshteinDistance implements StringDistance {
+public class LevenshteinDistance {
 
   public Double computeNormalized(String str1, String str2) {
     double normingValue = (double) Math.max(str1.length(), str2.length());
     return 1 - (this.compute(str1, str2) / normingValue);
   }
-  @Override
   public Double compute(String str1, String str2) {
     str1 = str1.toLowerCase();
     str2 = str2.toLowerCase();

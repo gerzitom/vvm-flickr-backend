@@ -1,9 +1,11 @@
 package cz.cvut.fit.vmm.backend.geo_distance;
 
+import cz.cvut.fit.vmm.backend.distance.GreatCircleDistance;
 import cz.cvut.fit.vmm.backend.dto.SearchGeoData;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.Test;
 
 class GreatCircleDistanceTest {
 

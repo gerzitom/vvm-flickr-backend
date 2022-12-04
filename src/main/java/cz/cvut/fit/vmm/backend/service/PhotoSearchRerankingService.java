@@ -6,7 +6,6 @@ import cz.cvut.fit.vmm.backend.dto.PhotoComputeScore;
 import cz.cvut.fit.vmm.backend.dto.PhotoReadDto;
 import cz.cvut.fit.vmm.backend.dto.PhotoSearchDto;
 import cz.cvut.fit.vmm.backend.dto.PhotoSortWrapper;
-import cz.cvut.fit.vmm.backend.score_computing_strategy.ScoreComputingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -17,8 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Service
 public class PhotoSearchRerankingService {
@@ -27,7 +24,7 @@ public class PhotoSearchRerankingService {
   private FlickrPhotosFetcher flickrPhotosFetcher;
 
   @Autowired
-  private ScoreComputingStrategy scoreComputingStrategy;
+  private ScoreComputingService scoreComputingService;
 
   public List<PhotoSortWrapper> searchPhotos(PhotoSearchDto search, int pageFrom, int pageTo) throws FlickrException {
     List<CompletableFuture<List<PhotoSortWrapper>>> photoScores = createFetchers(search, pageFrom, pageTo);
@@ -35,6 +32,16 @@ public class PhotoSearchRerankingService {
     List<PhotoSortWrapper> myPhotos = combineDataToList(photoScores);
     return myPhotos
             .stream()
+            .sorted(Comparator.comparingDouble(PhotoSortWrapper::getScore).reversed())
+            .toList();
+  }
+
+  public List<PhotoSortWrapper> searchPhotosWithoutParallelization(PhotoSearchDto search) throws FlickrException {
+    List<PhotoSortWrapper> photos = new ArrayList<>();
+    for(int i = 0; i <= search.getPagesToFetch(); i++){
+      photos.addAll(searchAndScore(search, i));
+    }
+    return photos.stream()
             .sorted(Comparator.comparingDouble(PhotoSortWrapper::getScore).reversed())
             .toList();
   }
@@ -69,25 +76,25 @@ public class PhotoSearchRerankingService {
     return simpleSearch;
   }
 
-
   @Async
   CompletableFuture<List<PhotoSortWrapper>> fetchPhotosAndComputeScore(PhotoSearchDto search, int page){
-    Logger.getLogger("flickr").log(Level.INFO, "Started page " + page);
-    CompletableFuture<List<PhotoSortWrapper>> future = CompletableFuture.supplyAsync(() -> {
+    return CompletableFuture.supplyAsync(() -> {
       try {
-        List<Photo> fetcherPhotos = flickrPhotosFetcher.searchFlickr(getSimplifiedSearch(search), page);
-        return fetcherPhotos.stream()
-                .map(PhotoReadDto::new)
-                .map(photo -> {
-                  PhotoComputeScore score = scoreComputingStrategy.computePhotoScore(photo, search);
-                  return new PhotoSortWrapper(photo, score.getScore(), score.getScoreStats());
-                })
-                .toList();
+        return searchAndScore(search, page);
       } catch (FlickrException e) {
         throw new RuntimeException(e);
       }
     });
-    Logger.getLogger("flickr").log(Level.INFO, "Ended page " + page);
-    return future;
+  }
+
+  private List<PhotoSortWrapper> searchAndScore(PhotoSearchDto search, int page) throws FlickrException {
+    List<Photo> fetcherPhotos = flickrPhotosFetcher.searchFlickr(getSimplifiedSearch(search), page);
+    return fetcherPhotos.stream()
+            .map(PhotoReadDto::new)
+            .map(photo -> {
+              PhotoComputeScore score = scoreComputingService.computePhotoScore(photo, search);
+              return new PhotoSortWrapper(photo, score.getScore(), score.getScoreStats());
+            })
+            .toList();
   }
 }

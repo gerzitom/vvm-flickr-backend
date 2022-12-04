@@ -1,7 +1,9 @@
 package cz.cvut.fit.vmm.backend.string_distance;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import cz.cvut.fit.vmm.backend.distance.LevenshteinDistance;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LevenshteinDistanceTest {
 

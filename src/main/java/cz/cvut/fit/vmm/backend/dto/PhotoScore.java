@@ -10,5 +10,5 @@ import lombok.Setter;
 public class PhotoScore {
   private Double geoDistance;
   private Double titleDistance;
-  private Double authorDistance;
+  private Double dateDistance;
 }

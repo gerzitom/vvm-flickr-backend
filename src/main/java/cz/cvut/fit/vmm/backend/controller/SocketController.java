@@ -52,7 +52,7 @@ public class SocketController {
     return allPhotos.stream()
             .distinct()
             .sorted(Comparator.comparingDouble(PhotoSortWrapper::getScore).reversed())
-            .limit(100)
+            .limit(50)
             .toList();
   }
 

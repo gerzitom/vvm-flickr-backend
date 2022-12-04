@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class FlickrService {
@@ -20,30 +19,30 @@ public class FlickrService {
   @Autowired
   private PhotoSearchRerankingService photoSearchRerankingService;
 
-  public List<PhotoReadDto> searchPhotos(PhotoSearchDto search) throws FlickrException, ExecutionException, InterruptedException {
+  public List<PhotoReadDto> searchPhotos(PhotoSearchDto search) throws FlickrException {
     List<Photo> photos = flickrPhotosFetcher.searchFlickr(search);
     return photos
             .stream()
-            .limit(100)
+            .limit(50)
             .map(PhotoReadDto::new)
             .toList();
   }
 
-  public List<PhotoSortWrapper> searchPhotosWithReranking(PhotoSearchDto search) throws FlickrException, ExecutionException, InterruptedException {
+  public List<PhotoSortWrapper> searchPhotosWithReranking(PhotoSearchDto search) throws FlickrException {
     List<PhotoSortWrapper> sortedPhotos = photoSearchRerankingService.searchPhotos(search, 0, search.getPagesToFetch());
     return sortedPhotos
             .stream()
             .distinct()
-            .limit(100)
+            .limit(50)
             .toList();
   }
 
-  public List<PhotoSortWrapper> searchPhotosWithReranking(PhotoSearchDto search, int pageFrom, int pageTo) throws FlickrException, ExecutionException, InterruptedException {
-    List<PhotoSortWrapper> sortedPhotos = photoSearchRerankingService.searchPhotos(search, pageFrom, pageTo);
+  public List<PhotoSortWrapper> searchPhotosWithoutParallelization(PhotoSearchDto search) throws FlickrException {
+    List<PhotoSortWrapper> sortedPhotos = photoSearchRerankingService.searchPhotosWithoutParallelization(search);
     return sortedPhotos
             .stream()
             .distinct()
-            .limit(100)
+            .limit(50)
             .toList();
   }
 

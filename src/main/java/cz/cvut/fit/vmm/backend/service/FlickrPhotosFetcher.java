@@ -13,6 +13,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Service for fetching data from Flickr API.
+ */
 @Service
 public class FlickrPhotosFetcher {
 
@@ -27,6 +30,7 @@ public class FlickrPhotosFetcher {
   public List<Photo> searchFlickr(PhotoSearchDto search) throws FlickrException {
     return this.searchFlickr(search, 1);
   }
+
   private SearchParameters createSearchParameters(PhotoSearchDto search) throws FlickrException {
     Set<String> extras = Set.of("date_taken", "owner_name", "geo", "date_upload", "path_alias", "icon_server");
     SearchParameters params = new SearchParameters();
@@ -34,8 +38,7 @@ public class FlickrPhotosFetcher {
     params.setExtras(Stream.of("media").collect(Collectors.toSet()));
     params.setText(search.getQuery());
     params.setTags(search.getTags());
-    params.setMinUploadDate(search.getDateFrom());
-    params.setMaxUploadDate(search.getDateTo());
+    params.setMaxUploadDate(search.getDate());
     params.setHasGeo(true);
     params.setExtras(extras);
     if(search.getGeo() != null){

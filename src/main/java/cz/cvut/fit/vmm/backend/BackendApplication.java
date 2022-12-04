@@ -1,8 +1,6 @@
 package cz.cvut.fit.vmm.backend;
 
 import com.flickr4java.flickr.photos.PhotosInterface;
-import cz.cvut.fit.vmm.backend.score_computing_strategy.ScoreComputingStrategy;
-import cz.cvut.fit.vmm.backend.score_computing_strategy.SimpleComputingStrategy;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,11 +29,6 @@ public class BackendApplication {
   @Bean
   public RestTemplate restTemplate() {
     return new RestTemplate();
-  }
-
-  @Bean
-  public ScoreComputingStrategy scoreComputeStrategy(){
-    return new SimpleComputingStrategy();
   }
 
   @Bean
